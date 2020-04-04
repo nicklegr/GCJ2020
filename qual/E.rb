@@ -103,18 +103,18 @@ def solve(mat, n, cur_r, cur_c, trace)
     return false
   end
 
-  val = (1..n).to_a
-
+  mask = (1 << n) - 1
   for r in 0...cur_r
-    val.delete(mat[r][cur_c])
+    mask &= ~(1 << (mat[r][cur_c]-1))
   end
-
   for c in 0...cur_c
-    val.delete(mat[cur_r][c])
+    mask &= ~(1 << (mat[cur_r][c]-1))
   end
 
-  val.each do |v|
-    mat[cur_r][cur_c] = v
+  for i in 0...n
+    next if ((mask >> i) & 1) == 0
+
+    mat[cur_r][cur_c] = i + 1
 
     next_r = cur_r
     next_c = cur_c
