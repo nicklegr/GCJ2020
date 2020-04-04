@@ -55,6 +55,14 @@ def puts_sync(str)
   STDOUT.flush
 end
 
+def array_2d(r, c)
+  ret = []
+  r.times do
+    ret << [0] * c
+  end
+  ret
+end
+
 class Integer
   def popcount32
     bits = self
