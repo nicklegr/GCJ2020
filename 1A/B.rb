@@ -100,94 +100,32 @@ cases = readline().to_i
 (1 .. cases).each do |case_index|
   n = ri
 
-  v = n
-  arr = []
-  last_factor = nil
-  loop do
-    break if v == 0
-
-    30.downto(0) do |i|
-      # diff
-      diff = 
-        if !last_factor
-          0
-        else
-          last_factor - i - 1
-        end
-
-      next if diff < 0
-
-      if v <= diff
-        if last_factor
-          raise "diff = #{diff}, v = #{v}, ones = #{ones(last_factor + 1)}" if v > ones(last_factor + 1)
-        end
-        v = 0
-        arr << {"move" => diff}
-        break
-      end
-
-      if v >= 2 ** i + diff
-        if diff != 0
-          v -= diff
-          raise if v < 0
-          arr << {"move" => diff}
-        end
-        v -= 2 ** i
-        arr << {"factor" => i}
-        last_factor = i
-        break
-      end
-    end
-    # ppd arr
-    # ppd v
-  end
-
   puts "Case ##{case_index}:"
 
-  cur_r = nil
+  v = 0
+  cur_r = 1
   cur_c = 1
-  arr.each do |e|
-    if e["factor"]
-      factor = e["factor"] + 1
-      next_r = nil
-      if !cur_r
-        cur_r = factor
-        next_r = factor
-      else
-        next_r = factor
-        raise if next_r >= cur_r
+  while v < n
+    row_sum = 2 ** (cur_r - 1)
+    if row_sum == 256 && n >= 256 + 30 && n <= 512 + 30
+      v += row_sum
+      for c in 1..cur_r
+        puts "#{cur_r} #{c}"
       end
-
-      # move to current row
-      (cur_r - 1).downto(next_r + 1) do |i|
-        cur_c -= 1 if cur_c != 1
-        puts "#{i} #{cur_c}"
+      cur_c = cur_r + 1
+      cur_r += 1
+    elsif row_sum == 512 && n > 512 + 30
+      v += row_sum
+      for c in 1..cur_r
+        puts "#{cur_r} #{c}"
       end
-
-      # trace row
-      if cur_c == 1
-        for c in 1..next_r
-          puts "#{next_r} #{c}"
-        end
-        cur_c = next_r
-      else
-        cur_c.downto(1) do |c|
-          puts "#{next_r} #{c}"
-        end
-        cur_c = 1
-      end
-    elsif e["move"]
-      raise if !cur_r
-      raise if !cur_c
-
-      diff = e["move"]
-      diff.times do
-        cur_r -= 1
-        cur_c -= 1 if cur_c != 1
-        puts "#{cur_r} #{cur_c}"
-      end
+      cur_c = cur_r + 1
+      cur_r += 1
     else
-      raise
+      v += 1
+      puts "#{cur_r} #{cur_c}"
+      cur_r += 1
+      cur_c += 1 if cur_c != 1
     end
   end
 
