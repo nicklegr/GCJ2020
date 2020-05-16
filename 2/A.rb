@@ -194,18 +194,40 @@ putsd "now: #{l} #{r}"
       v = 2*i + 1
       sum_odd(start, v) > l
     end
-    n = n-1
-    l_max_v = 2*n + 1
+    l_max_v = 
+      if n
+        n = n-1
+        2*n + 1
+      else
+        0
+      end
+    l_sum =
+      if n
+        sum_odd(start, l_max_v)
+      else
+        0
+      end
 
     n = (0..r).bsearch do |i|
       v = 2*i
       sum_even(start + 1, v) > r
     end
-    n = n-1
-    r_max_v = 2*n
+    r_max_v =
+      if n
+        n = n-1
+        2*n
+      else
+        0
+      end
+    r_sum =
+      if n
+        sum_even(start+1, r_max_v)
+      else
+        0
+      end
 
-    ans_l = l - sum_odd(start, l_max_v)
-    ans_r = r - sum_even(start+1, r_max_v)
+    ans_l = l - l_sum
+    ans_r = r - r_sum
     ans_n = [l_max_v, r_max_v].max
   else
     # l: even, r: odd
@@ -213,22 +235,48 @@ putsd "now: #{l} #{r}"
       v = 2*i
       sum_even(start, v) > l
     end
-    n = n-1
-    l_max_v = 2*n
+    l_max_v =
+      if n
+        n = n-1
+        2*n
+      else
+        0
+      end
+    l_sum =
+      if n
+        sum_even(start, l_max_v)
+      else
+        0
+      end
 
     n = (0..r).bsearch do |i|
       v = 2*i + 1
       sum_odd(start + 1, v) > r
     end
-    n = n-1
-    r_max_v = 2*n + 1
+    r_max_v =
+      if n
+        n = n-1
+        2*n + 1
+      else
+        0
+      end
+    r_sum =
+      if n
+        sum_odd(start+1, r_max_v)
+      else
+        0
+      end
 
-    ans_l = l - sum_even(start, l_max_v)
-    ans_r = r - sum_odd(start+1, r_max_v)
+    ans_l = l - l_sum
+    ans_r = r - r_sum
     ans_n = [l_max_v, r_max_v].max
   end
 
-  puts "Case ##{case_index}: #{ans_n} #{ans_l} #{ans_r}"
+  if swap
+    puts "Case ##{case_index}: #{ans_n} #{ans_r} #{ans_l}"
+  else
+    puts "Case ##{case_index}: #{ans_n} #{ans_l} #{ans_r}"
+  end
 putsd ""
 
   # # progress
